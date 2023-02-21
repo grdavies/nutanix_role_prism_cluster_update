@@ -1,17 +1,32 @@
 name: Ansible Galaxy
 
-on:
+on:  
   push:
-    branches:
-    - master
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Deploy the collection
-      uses: artis3n/ansible_galaxy_collection@v2
-      with:
-        api_key: ${{ secrets.GALAXY_API_KEY }}
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: run ansible-later action
+        uses: patrickjahns/ansible-later-action@master
+        with:
+          config: .later.yml
+          path: **/*.yml
+          
+  release:
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: galaxy
+        uses: buluma/galaxy-action@v1.0.3
+        with:
+          galaxy_api_key: ${{ secrets.galaxy_api_key }}
