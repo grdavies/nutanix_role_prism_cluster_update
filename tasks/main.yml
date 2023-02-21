@@ -10,7 +10,7 @@
 
 - name: Get Nutanix cluster details
   uri:
-    url: "https://{{nutanix_host}}:{{nutanix_port}}/PrismGateway/services/rest/v2.0/cluster"
+    url: "https://{{ nutanix_host }}:{{ nutanix_port }}/PrismGateway/services/rest/v2.0/cluster"
     method: GET
     validate_certs: "{{ validate_certs }}"
     body_format: json
@@ -38,7 +38,7 @@
   when:
     - nutanix_debug
 
-- name: cluster_external_address changed
+- name: Found cluster_external_address changed
   set_fact:
     cluster_external_address_changed:
   when:
@@ -55,7 +55,7 @@
     new_cluster_external_address:
       - ipv4: "{{ update_cluster_virtual_ip }}"
   when:
-    - nutanix_prism_cluster_current_config.json.cluster_external_address[0].ipv4 != ""
+    - nutanix_prism_cluster_current_config.json.cluster_external_address[0].ipv4
     - cluster_external_address_changed is defined
 
 - name: Debug new_cluster_external_address
@@ -77,7 +77,7 @@
   when:
     - nutanix_debug
 
-- name: cluster_external_data_services_address changed
+- name: Found cluster_external_data_services_address changed
   set_fact:
     cluster_external_data_services_address_changed:
   when:
@@ -95,7 +95,7 @@
     existing_cluster_external_data_services_address:
       ipv4: "{{ nutanix_prism_cluster_current_config.json.cluster_external_data_services_address.ipv4 }}"
   when:
-    - nutanix_prism_cluster_current_config.json.cluster_external_data_services_address.ipv4 | default('') != ""
+    - nutanix_prism_cluster_current_config.json.cluster_external_data_services_address.ipv4 | default(False)
 
 - name: Debug existing_cluster_external_data_services_address
   debug:
@@ -108,7 +108,7 @@
     new_cluster_external_data_services_address:
       ipv4: "{{ update_data_services_ip }}"
   when:
-    - update_data_services_ip != ""
+    - update_data_services_ip
     - cluster_external_data_services_address_changed is defined
 
 - name: Debug new_cluster_external_data_services_address
@@ -130,7 +130,7 @@
   when:
     - nutanix_debug
 
-- name: cluster_name changed
+- name: Found cluster_name changed
   set_fact:
     cluster_name_changed:
   when:
@@ -143,10 +143,11 @@
   when:
     - nutanix_debug
 
-- set_fact:
+- name: Set new cluster name fact
+  set_fact:
     new_cluster_name: "{{ update_cluster_name | default(nutanix_prism_cluster_current_config.json.name) }}"
   when:
-    - nutanix_prism_cluster_current_config.json.name != ""
+    - nutanix_prism_cluster_current_config.json.name
 
 - name: Debug new_cluster_name
   debug:
@@ -167,7 +168,7 @@
   when:
     - nutanix_debug
 
-- name: cluster_enable_rf1_container_changed changed
+- name: Found cluster_enable_rf1_container_changed changed
   set_fact:
     cluster_enable_rf1_container_changed:
   when:
@@ -180,7 +181,8 @@
   when:
     - nutanix_debug
 
-- set_fact:
+- name: Set new RF1 fact
+  set_fact:
     new_cluster_enable_rf1_container: "{{ update_enable_rf1_container | default(nutanix_prism_cluster_current_config.json.enable_rf1_container) }}"
   when:
     - cluster_enable_rf1_container_changed is defined
@@ -205,7 +207,7 @@
   when:
     - nutanix_debug
 
-- name: cluster_enable_shodow_clones_changed changed
+- name: Found cluster_enable_shodow_clones_changed changed
   set_fact:
     cluster_enable_shodow_clones_changed:
   when:
@@ -218,7 +220,8 @@
   when:
     - nutanix_debug
 
-- set_fact:
+- name: Set new shadow clone fact
+  set_fact:
     new_cluster_enable_shadow_clones: "{{ update_enable_shadow_clones }}"
   when:
     - cluster_enable_shodow_clones_changed is defined
@@ -232,7 +235,7 @@
 
 - name: Update Nutanix cluster settings
   uri:
-    url: "https://{{nutanix_host}}:{{nutanix_port}}/PrismGateway/services/rest/v2.0/cluster"
+    url: "https://{{ nutanix_host }}:{{ nutanix_port }}/PrismGateway/services/rest/v2.0/cluster"
     method: PUT
     validate_certs: "{{ validate_certs }}"
     body_format: json
