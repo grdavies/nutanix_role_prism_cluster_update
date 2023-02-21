@@ -4,21 +4,21 @@
     msg: "the variable 'nutanix_host' must be defined."
   when:
     - nutanix_host is not defined
-    - nutanix_host != ""
+    - not nutanix_host
 
 - name: Check nutanix_username is defined
   ansible.builtin.fail:
     msg: "the variable 'nutanix_username' must be defined."
   when:
     - nutanix_username is not defined
-    - nutanix_username != ""
+    - not nutanix_username
 
 - name: Check nutanix_password is defined
   ansible.builtin.fail:
     msg: "the variable 'nutanix_password' must be defined."
   when:
     - nutanix_password is not defined
-    - nutanix_password != ""
+    - not nutanix_password
 
 - name: Generate basic authorization string
   set_fact:
@@ -26,9 +26,9 @@
   no_log: True
   when:
     - nutanix_username is defined
-    - nutanix_username != ""
+    - nutanix_username
     - nutanix_password is defined
-    - nutanix_password != ""
+    - nutanix_password
 
 - name: Generate authorization header
   set_fact:
