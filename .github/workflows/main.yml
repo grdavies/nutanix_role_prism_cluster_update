@@ -1,10 +1,10 @@
 name: Ansible Galaxy
 
-on:  
+on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -17,8 +17,8 @@ jobs:
         uses: patrickjahns/ansible-later-action@master
         with:
           config: .later.yml
-          path: **/*.yml
-          
+          path: tasks
+
   release:
     needs:
       - test
