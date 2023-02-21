@@ -51,7 +51,8 @@
   when:
     - nutanix_debug
 
-- set_fact:
+- name: Set new_cluster_external_address
+  set_fact:
     new_cluster_external_address:
       - ipv4: "{{ update_cluster_virtual_ip }}"
   when:
