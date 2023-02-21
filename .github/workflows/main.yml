@@ -16,7 +16,7 @@ jobs:
       - name: run ansible-later action
         uses: patrickjahns/ansible-later-action@master
         with:
-          config: .later.yml
+          # config: .later.yml
           path: tasks
 
   release:
